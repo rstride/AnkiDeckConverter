@@ -3,7 +3,7 @@ import pykakasi
 import genanki
 
 # Load the CSV file
-file_path = 'N4 Kanji _ Vocabulary.csv'
+file_path = 'N5 Kanji _ Vocabulary.csv'
 df = pd.read_csv(file_path)
 
 # Initialize pykakasi converter
@@ -78,4 +78,4 @@ for index, row in df.iterrows():
 output_file_path = 'N4_Kanji_Vocabulary.apkg'
 genanki.Package(my_deck).write_to_file(output_file_path)
 
-print(f"Anki deck has been exported to {output_file_path}"
+print(f"Anki deck has been exported to {output_file_path}")
