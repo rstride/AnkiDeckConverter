@@ -1,9 +1,8 @@
 import pandas as pd
 import pykakasi
-import genanki
 
 # Load the CSV file
-file_path = 'N5 Kanji _ Vocabulary.csv'
+file_path = 'N4 Kanji _ Vocabulary.csv'
 df = pd.read_csv(file_path)
 
 # Initialize pykakasi converter
@@ -31,51 +30,12 @@ def add_furigana(row):
 # Apply the function to each row
 df[['Kanji', 'Furigana', 'Meaning']] = df.apply(add_furigana, axis=1)
 
-# Define the model for Anki cards with furigana overlay
-my_model = genanki.Model(
-  1607392319,
-  'Furigana Model',
-  fields=[
-    {'name': 'Kanji'},
-    {'name': 'Furigana'},
-    {'name': 'Meaning'},
-  ],
-  templates=[
-    {
-      'name': 'Card 1',
-      'qfmt': '{{Kanji}}',
-      'afmt': '{{furigana:Kanji}}<br>{{Meaning}}',
-    },
-  ],
-  css="""
-    .card {
-      font-family: arial;
-      font-size: 20px;
-      text-align: center;
-      color: black;
-      background-color: white;
-    }
-    ruby {
-      ruby-position: over;
-    }
-  """
-)
+# Drop the original columns
+df = df.drop(columns=['japanese/_name', 'japanese/__text', 'text/_name', 'text/__text'])
 
-# Create a new Anki deck
-my_deck = genanki.Deck(
-  2059400110,
-  'N4 Kanji Vocabulary')
+# Save the cleaned data to a new CSV file
+output_file_path = (file_path).replace('.csv', '_cleaned.csv')
+df.to_csv(output_file_path, index=False)
 
-# Add notes to the deck
-for index, row in df.iterrows():
-    note = genanki.Note(
-        model=my_model,
-        fields=[row['Kanji'], row['Furigana'], row['Meaning']]
-    )
-    my_deck.add_note(note)
-
-# Save the deck to a file
-output_file_path = 'N4_Kanji_Vocabulary.apkg'
-genanki.Package(my_deck).write_to_file(output_file_path)
-
-print(f"Anki deck has been exported to {output_file_path}")
+# Display the dataframe (for debugging purposes if needed)
+print(df.head())
